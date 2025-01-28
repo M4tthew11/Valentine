@@ -1,0 +1,181 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Will U Be My Valentine?</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to bottom, #ffcccc, #ffe6e6);
+            text-align: center;
+            padding: 50px;
+            overflow: hidden;
+            height: 100vh;
+            margin: 0;
+        }
+        h1 {
+            font-size: 2em;
+            color: #ff3366;
+            text-shadow: 2px 2px 5px #ff99cc;
+        }
+        p {
+            font-size: 1em;
+            color: #333;
+        }
+        .button {
+            display: inline-block;
+            margin: 20px;
+            padding: 15px 30px;
+            font-size: 1em;
+            color: white;
+            background-color: #ff3366;
+            border: none;
+            border-radius: 25px;
+            text-decoration: none;
+            box-shadow: 2px 2px 5px #ff99cc;
+            transition: background-color 0.3s;
+        }
+        .button:hover {
+            background-color: #ff6699;
+        }
+        .no-button {
+            position: absolute;
+            padding: 15px 30px;
+            font-size: 1em;
+            color: white;
+            background-color: #ff3366;
+            border: none;
+            border-radius: 25px;
+            text-decoration: none;
+            box-shadow: 2px 2px 5px #ff99cc;
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+        .wheel-container {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #ffffff;
+            border-radius: 50%;
+            width: 300px;
+            height: 300px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .wheel {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 5px solid #ff3366;
+        }
+        .segment {
+            position: absolute;
+            width: 50%;
+            height: 50%;
+            background-color: transparent;
+            transform-origin: 100% 100%;
+            clip-path: polygon(100% 100%, 0% 100%, 100% 0%);
+        }
+        .segment:nth-child(1) { background-color: #ff6699; transform: rotate(0deg); }
+        .segment:nth-child(2) { background-color: #ff99cc; transform: rotate(45deg); }
+        .segment:nth-child(3) { background-color: #ffccee; transform: rotate(90deg); }
+        .segment:nth-child(4) { background-color: #ffb3e6; transform: rotate(135deg); }
+        .segment:nth-child(5) { background-color: #ffe6f7; transform: rotate(180deg); }
+        .segment:nth-child(6) { background-color: #ffcce6; transform: rotate(225deg); }
+        .segment:nth-child(7) { background-color: #ff99ff; transform: rotate(270deg); }
+        .segment:nth-child(8) { background-color: #ff66ff; transform: rotate(315deg); }
+        .pointer {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            background-color: #ff3366;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2;
+        }
+        .spin-btn {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 1em;
+            color: white;
+            background-color: #ff3366;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            display: inline-block;
+        }
+    </style>
+    <script>
+        function makeNoButtonRunAway(button) {
+            const randomX = Math.random() * (window.innerWidth - button.offsetWidth);
+            const randomY = Math.random() * (window.innerHeight - button.offsetHeight);
+            button.style.left = `${randomX}px`;
+            button.style.top = `${randomY}px`;
+        }
+
+        function onYesClick() {
+            document.body.style.backgroundColor = "#ff6666";
+            const rewardButton = document.createElement('button');
+            rewardButton.className = 'button';
+            rewardButton.innerText = "Odbierz Nagrodę 🎁";
+            rewardButton.onclick = showWheel;
+            document.body.appendChild(rewardButton);
+        }
+
+        function showWheel() {
+            const wheelContainer = document.querySelector('.wheel-container');
+            wheelContainer.style.display = 'block';
+        }
+
+        function spinWheel() {
+            const wheel = document.querySelector('.wheel');
+            const randomDegree = Math.floor(Math.random() * 360);
+            setTimeout(() => {
+                const prizeIndex = Math.floor(((randomDegree % 360) / (360 / 6))); // 6 segments
+                const prizes = ["Kwiatuszki", "100 buziaczków", "Coś słodkiego", "Obiadek", "Bon na masaż (masażysta Mateusz)", "Niespodzianka"];
+                alert(`You won: ${prizes[prizeIndex]}!`);
+                isSpinning = false;
+            }, 5000);
+            wheel.style.transition = 'transform 3s ease-out';
+            wheel.style.transform = `rotate(${randomDegree + 3600}deg)`;
+            setTimeout(() => {
+                alert("Gratulacje! Otrzymujesz nagrodę!");
+            }, 3000);
+        }
+
+        document.addEventListener('touchstart', (e) => {
+            const noButton = document.querySelector('.no-button');
+            if (e.target === noButton) {
+                makeNoButtonRunAway(noButton);
+            }
+        });
+    </script>
+</head>
+<body>
+    <h1>Will U Be My Valentine?</h1>
+    <p>Roses are red, violets are blue, here's a question just for you:</p>
+    <a href="#" class="button" onclick="onYesClick()">Yes 💖</a>
+    <button class="no-button" onclick="makeNoButtonRunAway(this)" style="top: 50%; left: 50%; position: absolute;">No!</button>
+    
+    <div class="wheel-container">
+        <div class="wheel">
+            <div class="segment"></div>
+            <div class="segment"></div>
+            <div class="segment"></div>
+            <div class="segment"></div>
+            <div class="segment"></div>
+            <div class="segment"></div>
+            <div class="segment"></div>
+            <div class="segment"></div>
+            <div class="segment"></div>
+        </div>
+        <button class="spin-btn" onclick="spinWheel()">Spin the Wheel</button>
+    </div>
+</body>
+</html>
